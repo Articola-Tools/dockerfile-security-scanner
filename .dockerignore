@@ -1,0 +1,8 @@
+.idea
+.github
+.git
+tests
+.dockerignore
+Dockerfile
+LICENSE
+README.md
