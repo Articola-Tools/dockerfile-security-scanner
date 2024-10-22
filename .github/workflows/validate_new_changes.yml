@@ -85,7 +85,7 @@ jobs:
             - name: "Test secure Docker container"
               run: "docker run --rm --group-add $(getent group docker | cut -d: -f3)
                     -v /var/run/docker.sock:/var/run/docker.sock
-                    local/dockerfile-security-scanner:latest local/secure-docker-image-test:latest"
+                    local/dockerfile-security-scanner-pr:latest local/secure-docker-image-test:latest"
 
             - name: "Build insecure test Dockerfile Docker image"
               uses: "docker/build-push-action@v6"
@@ -98,13 +98,13 @@ jobs:
             - name: "Test insecure Docker container"
               run: "docker run --rm --group-add $(getent group docker | cut -d: -f3)
                     -v /var/run/docker.sock:/var/run/docker.sock
-                    local/dockerfile-security-scanner:latest local/insecure-docker-image-test:latest
+                    local/dockerfile-security-scanner-pr:latest local/insecure-docker-image-test:latest
                     && { echo 'Insecure Dockerfile test must fail!' >&2; exit 1; } || exit 0"
 
             - name: "Scan scanner Docker image"
               run: "docker run --rm --group-add $(getent group docker | cut -d: -f3)
-                    -v /var/run/docker.sock:/var/run/docker.sock local/dockerfile-security-scanner:latest
-                    local/dockerfile-security-scanner:latest"
+                    -v /var/run/docker.sock:/var/run/docker.sock local/dockerfile-security-scanner-pr:latest
+                    local/dockerfile-security-scanner-pr:latest"
 
     validate-dockerfile-changes:
         runs-on: "ubuntu-latest"
