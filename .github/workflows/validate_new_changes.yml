@@ -17,6 +17,7 @@ jobs:
         outputs:
             is_yaml_changed: "${{ steps.filter.outputs.yaml }}"
             is_dockerfile_changed: "${{ steps.filter.outputs.dockerfile }}"
+            is_dockerfile_scanner_image_changed: "${{ steps.filter.outputs.dockerfile-scanner-image }}"
             is_markdown_changed: "${{ steps.filter.outputs.markdown }}"
         permissions:
             pull-requests: "read"
@@ -36,13 +37,16 @@ jobs:
                       - "**/*.yml"
                       dockerfile:
                       - "**/Dockerfile"
+                      dockerfile-scanner-image
+                      - "**/Dockerfile"
+                      - "**/.dockerignore"
                       markdown:
                       - "**/*.md"
 
     validate-dockerfile-security-scanner-image:
         runs-on: "ubuntu-latest"
         needs: "find-changed-files"
-        if: "${{ needs.find-changed-files.outputs.is_dockerfile_changed == 'true' }}"
+        if: "${{ needs.find-changed-files.outputs.is_dockerfile_scanner_image_changed == 'true' }}"
 
         # NOTE: building and running Docker image of Dockerfile security scanner take around 1 minute.
         # If this job takes more than 5 minutes, it means that something is wrong.
