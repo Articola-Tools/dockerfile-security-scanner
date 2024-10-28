@@ -1,0 +1,23 @@
+name: "PR name validation"
+
+on:
+    pull_request:
+        types: ["opened", "edited", "reopened", "ready_for_review"]
+
+env:
+    REGISTRY: "ghcr.io"
+
+jobs:
+    validate-pr-name:
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "Login to Docker registry"
+              uses: "docker/login-action@v3"
+              with:
+                  registry: "${{ env.REGISTRY }}"
+                  username: "${{ github.actor }}"
+                  password: "${{ secrets.GITHUB_TOKEN }}"
+
+            - name: "Validate PR name"
+              run: "docker run --rm ${{ env.REGISTRY }}/articola-tools/pr-name-validator:latest
+                    '${{ github.event.pull_request.title }}'"
