@@ -2,8 +2,8 @@ FROM aquasec/trivy:0.57.1
 
 RUN addgroup -S scannergroup && adduser -S scanneruser -G scannergroup
 
-# NOTE: update to latest secure libcrypto3 version
-RUN apk add --no-cache libcrypto3=3.3.2-r1
+# NOTE: update to latest secure versions
+RUN apk add --no-cache libcrypto3=3.3.2-r1 && go get github.com/golang-jwt/jwt/v4@v4.5.1
 
 USER scanneruser
 
