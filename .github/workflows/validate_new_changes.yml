@@ -19,6 +19,8 @@ jobs:
             is_dockerfile_changed: "${{ steps.filter.outputs.dockerfile }}"
             is_dockerfile_scanner_image_changed: "${{ steps.filter.outputs.dockerfile-scanner-image }}"
             is_markdown_changed: "${{ steps.filter.outputs.markdown }}"
+            changed_or_added_files: "${{ steps.filter.outputs.changed-or-added-files }}"
+            changed_or_added_files_list: "${{ steps.filter.outputs.changed-or-added-files_files }}"
         permissions:
             pull-requests: "read"
         steps:
@@ -31,6 +33,8 @@ jobs:
               uses: "dorny/paths-filter@v3"
               id: "filter"
               with:
+                  list-files: "shell"
+
                   filters: |
                       yaml:
                       - "**/*.yaml"
@@ -42,6 +46,8 @@ jobs:
                       - "**/.dockerignore"
                       markdown:
                       - "**/*.md"
+                      changed-or-added-files:
+                      - added|modified: '**'
 
     validate-dockerfile-security-scanner-image:
         runs-on: "ubuntu-latest"
@@ -188,3 +194,24 @@ jobs:
             - name: "Run Dockerfile linter"
               run: "docker run --rm -v ${{ github.workspace }}:/linter_workdir/repo
                     ${{ env.REGISTRY }}/articola-tools/markdown-linter:latest"
+
+    validate-file-paths:
+        runs-on: "ubuntu-latest"
+        needs: "find-changed-files"
+        if: "${{ needs.find-changed-files.outputs.changed_or_added_files == 'true' }}"
+
+        # NOTE: validating file paths takes around 1 minute.
+        # If this job takes more than 5 minutes, it means that something is wrong.
+        timeout-minutes: 5
+        steps:
+            - name: "Validate file paths"
+              run: |
+                  for path in ${{ needs.find-changed-files.outputs.changed_or_added_files_list }}; do
+
+                  # NOTE: ignore `.idea` folder because it's generated. Ignore files with special names.
+
+                  if [[ "$path" != .idea* && "$path" != *Dockerfile && "$path" != *README.md && "$path" != *LICENSE ]]; then
+                  docker run --rm ${{ env.REGISTRY }}/articola-tools/file-path-validator \
+                  --naming-convention snake_case --path-to-validate "$path";
+                  fi
+                  done
