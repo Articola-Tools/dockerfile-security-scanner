@@ -2,9 +2,6 @@ FROM aquasec/trivy:0.59.0
 
 RUN addgroup -S scannergroup && adduser -S scanneruser -G scannergroup
 
-# NOTE: update to latest secure libcrypto3 version
-RUN apk add --no-cache libcrypto3=3.3.2-r1
-
 USER scanneruser
 
 HEALTHCHECK --timeout=1s --retries=1 CMD trivy --version || exit 1
