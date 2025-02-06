@@ -2,6 +2,9 @@ FROM aquasec/trivy:0.59.1
 
 RUN addgroup -S scannergroup && adduser -S scanneruser -G scannergroup
 
+# NOTE: ignoring "Only One Entrypoint" because it seems to be false-positive for Dockerfiles like this one.
+RUN echo "AVD-DS-0007" > /home/scanneruser/.trivyignore
+
 USER scanneruser
 
 HEALTHCHECK --timeout=1s --retries=1 CMD trivy --version || exit 1
@@ -15,4 +18,4 @@ ENTRYPOINT ["trivy", "image", \
             "--pkg-types", "os,library", \
             "--severity", "CRITICAL,HIGH,MEDIUM,LOW", \
             "--image-config-scanners", "misconfig,secret", \
-            "--scanners", "vuln,secret,misconfig", "--debug", "-f", "json"]
+            "--scanners", "vuln,secret,misconfig"]
