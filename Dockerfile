@@ -1,9 +1,9 @@
-FROM aquasec/trivy:0.58.0
+FROM aquasec/trivy:0.59.1
 
 RUN addgroup -S scannergroup && adduser -S scanneruser -G scannergroup
 
-# NOTE: update to latest secure libcrypto3 version
-RUN apk add --no-cache libcrypto3=3.3.2-r1
+# NOTE: ignoring "Only One Entrypoint" because it seems to be false-positive for Dockerfiles like this one.
+RUN echo "AVD-DS-0007" > /home/scanneruser/.trivyignore
 
 USER scanneruser
 
@@ -18,4 +18,5 @@ ENTRYPOINT ["trivy", "image", \
             "--pkg-types", "os,library", \
             "--severity", "CRITICAL,HIGH,MEDIUM,LOW", \
             "--image-config-scanners", "misconfig,secret", \
-            "--scanners", "vuln,secret,misconfig"]
+            "--scanners", "vuln,secret,misconfig", \
+            "--ignorefile", "/home/scanneruser/.trivyignore"]
