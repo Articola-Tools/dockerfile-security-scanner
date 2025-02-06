@@ -18,4 +18,5 @@ ENTRYPOINT ["trivy", "image", \
             "--pkg-types", "os,library", \
             "--severity", "CRITICAL,HIGH,MEDIUM,LOW", \
             "--image-config-scanners", "misconfig,secret", \
-            "--scanners", "vuln,secret,misconfig"]
+            "--scanners", "vuln,secret,misconfig" \
+            "--ignorefile", "/home/scanneruser/.trivyignore"]
