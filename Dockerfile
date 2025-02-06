@@ -15,4 +15,4 @@ ENTRYPOINT ["trivy", "image", \
             "--pkg-types", "os,library", \
             "--severity", "CRITICAL,HIGH,MEDIUM,LOW", \
             "--image-config-scanners", "misconfig,secret", \
-            "--scanners", "vuln,secret,misconfig", "--debug", "-f json"]
+            "--scanners", "vuln,secret,misconfig", "--debug", "-f", "json"]
