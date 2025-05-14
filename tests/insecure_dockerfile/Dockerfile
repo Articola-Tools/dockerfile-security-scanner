@@ -1,4 +1,4 @@
-FROM aquasec/trivy:0.58.0
+FROM aquasec/trivy:0.62.1
 
 # NOTE: `--db-repository` is needed because sometimes GHCR hits the rate limit, and AWS will be used instead.
 ENTRYPOINT ["trivy", "image", \
