@@ -26,7 +26,7 @@ jobs:
         timeout-minutes: 5
         steps:
             - name: "Checkout ${{ github.event.repository.name }}"
-              uses: "actions/checkout@v4"
+              uses: "actions/checkout@v5"
 
             - name: "Add short hash of current commit to environment variables"
               run: "echo \"CURRENT_COMMIT_SHORT_HASH=$(git rev-parse --short \"$GITHUB_SHA\")\" >> \"$GITHUB_ENV\""
