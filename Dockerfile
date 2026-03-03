@@ -1,4 +1,4 @@
-FROM aquasec/trivy:0.62.1
+FROM aquasec/trivy:0.69.2
 
 RUN addgroup -S scannergroup && adduser -S scanneruser -G scannergroup
 
