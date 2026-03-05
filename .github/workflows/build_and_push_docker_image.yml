@@ -42,7 +42,7 @@ jobs:
                   password: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: "Build and push Dockerfile security scanner linter Docker image"
-              uses: "docker/build-push-action@v6"
+              uses: "docker/build-push-action@v7"
               id: "build-and-push"
               with:
                   # NOTE: setup of `context` is needed to force builder to use the `.dockerignore` file.
