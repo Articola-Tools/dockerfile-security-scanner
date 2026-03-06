@@ -72,7 +72,7 @@ jobs:
                   password: "${{ secrets.GITHUB_TOKEN }}"
 
             - name: "Build Dockerfile security scanner Docker image"
-              uses: "docker/build-push-action@v6"
+              uses: "docker/build-push-action@v7"
               with:
                   # NOTE: setup of `context` is needed to force builder to use the `.dockerignore` file.
                   context: "."
@@ -85,7 +85,7 @@ jobs:
                   cache-to: "type=inline"
 
             - name: "Build secure test Dockerfile Docker image"
-              uses: "docker/build-push-action@v6"
+              uses: "docker/build-push-action@v7"
               with:
                   context: "./tests/secure_dockerfile"
                   push: false
@@ -98,7 +98,7 @@ jobs:
                     local/dockerfile-security-scanner-pr:latest local/secure-docker-image-test:latest"
 
             - name: "Build insecure test Dockerfile Docker image"
-              uses: "docker/build-push-action@v6"
+              uses: "docker/build-push-action@v7"
               with:
                   context: "./tests/insecure_dockerfile"
                   push: false
