@@ -5,8 +5,12 @@ updates:
       directory: "/"
       schedule:
           interval: "daily"
+      commit-message:
+          prefix: "setup(ci)"
 
     - package-ecosystem: "docker"
       directory: "/"
       schedule:
           interval: "daily"
+      commit-message:
+          prefix: "setup(dockerfile)"
