@@ -1,0 +1,45 @@
+name: Customize Dependabot PR Titles
+
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  customize-title:
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Get changed files
+        id: changed-files
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            const hasDockerfile = files.some(f => 
+              f.filename.includes('Dockerfile') || 
+              f.filename.endsWith('.dockerfile')
+            );
+            return hasDockerfile;
+      - name: Update PR title
+        if: steps.changed-files.outputs.result == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            const newTitle = pr.title.replace(/^build(deps): /, 'setup(dockerfile): ');
+            await github.rest.pulls.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              title: newTitle,
+            });
