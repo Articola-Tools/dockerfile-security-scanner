@@ -1,4 +1,4 @@
-FROM aquasec/trivy:0.71.1
+FROM aquasec/trivy:0.71.2
 
 # NOTE: Updating to latest secure version of libcrypto3
 RUN addgroup -S scannergroup && adduser -S scanneruser -G scannergroup && apk add --no-cache libcrypto3=3.5.7-r0
